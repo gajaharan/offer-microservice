@@ -1,0 +1,111 @@
+swagger: '2.0'
+info:
+  version: '1.0'
+  title: 'Offer-API'
+  description: 'Offer API to create, retrieve and cancel offers'
+host: 'localhost'
+basePath: '/'
+schemes:
+- 'https'
+tags:
+- name: Offer
+paths:
+  /offers:
+    post:
+      tags:
+      - Offer
+      description: Creates an offer
+      operationId: createOffer
+      consumes:
+      - application/json
+      parameters:
+      - in: body
+        name: payload
+        required: true
+        description: Payload of the offer to create
+        schema:
+          $ref: '#/definitions/offer'
+      responses:
+        201:
+          description: Created
+          headers:
+            Location:
+              type: string
+              description: id for the offer created.
+        400:
+          description: Bad Request
+        500:
+          description: Something badly went wrong!
+  /offers/{id}:
+    get:
+      tags:
+      - Offer
+      description: Get offer by id
+      operationId: getOfferById
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        required: true
+        type: string
+        description: id of the offer to retrieve
+      responses:
+        200:
+          description: All Good!
+          schema:
+            $ref: '#/definitions/offer'
+        404:
+          description: Offer not Found!
+        500:
+          description: Something badly went wrong!
+  /offers/{id}/cancel:
+    delete:
+      tags:
+      - Offer
+      description: Cancel offer by id
+      operationId: cancelOfferById
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        required: true
+        type: string
+        description: id of the offer to cancel
+      responses:
+        200:
+          description: All Good!
+        404:
+          description: Offer Not Found!
+        500:
+          description: Something badly went wrong!
+definitions:
+  offer:
+    required:
+    - description
+    - price
+    - startDate
+    - endDate
+    type: object
+    properties:
+      id:
+        type: string
+        example: 1
+        description: id of the offer
+      description:
+        type: string
+        example: this is an offer
+        description: Description of the offer
+      price:
+        type: string
+        example: 1.99
+        description: Offer price
+      startDate:
+        type: string
+        example: 01-02-2020
+        description: Start Date of the offer
+      endDate:
+        type: string
+        example: 02-02-2020
+        description: End Date of the offer
