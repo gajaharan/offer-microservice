@@ -8,11 +8,10 @@ import io.restassured.RestAssured;
 import io.restassured.parsing.Parser;
 import org.apache.http.HttpStatus;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -27,14 +26,13 @@ import static org.mockito.Mockito.when;
 @RunWith(SpringRunner.class)
 public class OfferControllerTest {
     private static final String OFFERS_ENDPOINT = "/offers/";
-    private static final String OFFER_ID_PARAM = "id";
-    private static final Long OFFER_ID = 1l;
+    private static final String OFFER_ID = "1";
 
     @LocalServerPort
     private int serverPort;
 
-    @Mock
-    OfferService mockOfferService;
+    @MockBean
+    private OfferService mockOfferService;
 
     @Before
     public void setUp() throws Exception {
@@ -44,49 +42,64 @@ public class OfferControllerTest {
 
     @Test
     public void createOffer_shouldReturn201AndLocationHeader() {
-        when(mockOfferService.createOffer(RequestBuilder.createOffer())).thenReturn(OFFER_ID);
+        Long offerId = 0l;
+        Offer createdOffer = RequestBuilder.createOffer();
+        when(mockOfferService.createOffer(createdOffer)).thenReturn(offerId);
 
         given().
                 contentType(MediaType.APPLICATION_JSON_VALUE).
-                body(RequestBuilder.createOffer()).
+                body(createdOffer).
                 log().everything().
         when().
                 post(OFFERS_ENDPOINT).
         then().
                 log().everything().
                 statusCode(HttpStatus.SC_CREATED).
-                header("Location", RestAssured.baseURI + ":" + RestAssured.port + "/offers/" + OFFER_ID);
+                header("Location", RestAssured.baseURI + ":" + RestAssured.port + "/offers/" + offerId);
     }
 
-    @Ignore
+    @Test
     public void getOfferByID_shouldReturn200AndBody(){
         Offer retrievedOffer = RequestBuilder.createOffer();
-        String offerId = "1";
-        when(mockOfferService.getOfferById(offerId)).thenReturn(retrievedOffer);
+
+        when(mockOfferService.getOfferById(OFFER_ID)).thenReturn(retrievedOffer);
 
         given().
                 contentType(MediaType.APPLICATION_JSON_VALUE).
                 log().everything().
         when().
-                get(OFFERS_ENDPOINT+"{id}", offerId).
+                get(OFFERS_ENDPOINT+"{id}", OFFER_ID).
         then().
                 log().everything().
                 statusCode(HttpStatus.SC_OK);
     }
 
-    @Ignore
+    @Test
     public void getOfferByID_shouldReturn404(){
-        String offerId = "1";
-        when(mockOfferService.getOfferById(offerId)).thenThrow(new OfferNotFoundException("Error"));
+        when(mockOfferService.getOfferById(OFFER_ID)).thenThrow(new OfferNotFoundException("Error"));
 
         given().
                 contentType(MediaType.APPLICATION_JSON_VALUE).
                 log().everything().
                 when().
-                get(OFFERS_ENDPOINT+"{id}", offerId).
+                get(OFFERS_ENDPOINT+"{id}", OFFER_ID).
                 then().
                 log().everything().
                 statusCode(HttpStatus.SC_NOT_FOUND);
+    }
+
+    @Test
+    public void cancelOffer_shouldReturn200() throws OfferNotFoundException {;
+        when(mockOfferService.cancelOfferById(String.valueOf(OFFER_ID))).thenReturn(true);
+
+        given().
+                contentType(MediaType.APPLICATION_JSON_VALUE).
+                log().everything().
+                when().
+                delete(OFFERS_ENDPOINT+"{id}/cancel", OFFER_ID).
+                then().
+                log().everything().
+                statusCode(HttpStatus.SC_OK);
     }
 
 }

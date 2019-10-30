@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,13 +36,23 @@ public class OfferController {
 
         Long id = offerService.createOffer(offer);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand("1").toUri();
+                .buildAndExpand(id).toUri();
         return ResponseEntity.created(location).build();
     }
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Offer> getOfferById (@PathVariable("id") String id) throws OfferNotFoundException {
+        log.info("Called GET /offers/{}", id);
+
         Offer retrievedOffer = offerService.getOfferById(id);
         return new ResponseEntity<>(retrievedOffer, HttpStatus.OK);
+    }
+
+    @DeleteMapping(path="/{id}/cancel")
+    public ResponseEntity<Void> cancelOfferById (@PathVariable("id") String id) throws OfferNotFoundException {
+        log.info("Called GET /offers/{}/cancel", id);
+
+        offerService.cancelOfferById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
