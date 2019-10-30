@@ -1,5 +1,6 @@
 package com.gajaharan.offer.service;
 
+import com.gajaharan.offer.exception.OfferNotFoundException;
 import com.gajaharan.offer.exception.OfferServiceException;
 import com.gajaharan.offer.model.Offer;
 import com.gajaharan.offer.repository.OfferRepository;
@@ -25,5 +26,10 @@ public class OfferService {
             log.error("Unable to save {}", offer, ex);
             throw new OfferServiceException("Unable to save " + offer);
         }
+    }
+
+    public Offer getOfferById(String id) {
+        return  offerRepository.findById(Long.valueOf(id))
+        .orElseThrow(() -> new OfferNotFoundException(String.format("Offer Not found for id: %s", id)));
     }
 }
