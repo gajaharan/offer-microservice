@@ -22,7 +22,7 @@ Offer will have
 * Java 8
 * Spring Boot 2.1.7
 * JPA with H2 database
-* Testing - Junit, Mockito, Rest Assured.
+* Testing - Junit, Mockito, Rest Assured, Contract Verifier Test.
 
 ## Build and Run
 
@@ -34,11 +34,15 @@ Offer will have
 * Run as a Spring Boot local application
 * `mvn clean install spring-boot:run -Dspring.profiles.active=local`
 
+#### You can access Swagger UI on
+http://localhost:9091/swagger-ui.html#/
+
 ## Overview
 
 Contract definition can be found [here](https://raw.githubusercontent.com/gajaharan/offer-microservice/master/src/main/resources/swagger.yaml)
+https://raw.githubusercontent.com/gajaharan/offer-microservice/master/src/main/resources/swagger.yaml
 
-### Summary 
+### Summary
 | Endpoint             | method   | Status                            |
 |:---------------------|:---------|:---------------------------------|
 | `/offers`            |   POST   | Response code 201 and Location header, 400, 500 |
@@ -71,12 +75,11 @@ Contract definition can be found [here](https://raw.githubusercontent.com/gajaha
 
 ### Assumptions
 * Spent time designing the endpoint using Swaggerhub and created the swagger yaml file (in main resource folder).
-I believe
 * Offer model is used is used as POST payload, GET response and entity. Ideally would of seperated this as three
 seperate models.
 * Kept the controller as simple as possible with three endpoints (create, retrieve by id, cancel by id)
 * Most of the business logic in the Offer Service
-* If time permitted would like to add validation to the start and end date, so the user will get a 400 response about
+* If time permitted would like to add friendly validation to the start and end date, so the user will get a 400 response about
 correct date format, if the start date is before end date, etc. Assuming the front end will check this.
 * The offer expiry is checked when the offer is retrieved.
 * Offer statuses are saved into the database

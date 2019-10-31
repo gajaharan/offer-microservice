@@ -1,0 +1,17 @@
+{
+  "request": {
+    "url": "/offers",
+    "method": "POST",
+    "bodyPatterns": [
+      {
+        "contains": "tetherByAccountSessionId"
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "json/application"
+    }
+  }
+}
