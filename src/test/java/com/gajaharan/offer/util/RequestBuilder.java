@@ -34,4 +34,15 @@ public class RequestBuilder {
         offer.setEndDate(LocalDateTime.now().plus(1, ChronoUnit.DAYS));
         return offer;
     }
+
+    public static OfferRequest createInvalidOfferRequest() {
+
+        OfferRequest offer = new OfferRequest();
+        offer.setAmount(new BigDecimal(-2.0));
+        offer.setCurrency("");
+        offer.setDescription("Test offer");
+        offer.setStartDate(LocalDateTime.now().plus(1, ChronoUnit.DAYS));
+        offer.setEndDate(LocalDateTime.now().plus(1, ChronoUnit.DAYS));
+        return offer;
+    }
 }

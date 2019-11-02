@@ -18,6 +18,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
 
 /**
@@ -61,7 +63,23 @@ public class OfferControllerTest {
     }
 
     @Test
-    public void getOfferByID_shouldReturn200AndBody(){
+    public void createOffer_shouldReturn400AndFriendErrorMessage() {
+        OfferRequest offerRequest = RequestBuilder.createInvalidOfferRequest();
+        given().
+                contentType(MediaType.APPLICATION_JSON_VALUE).
+                body(offerRequest).
+                log().everything().
+        when().
+                post(OFFERS_ENDPOINT).
+        then().
+                log().everything().
+                statusCode(HttpStatus.SC_BAD_REQUEST).
+                body("amount", is(equalTo("The amount must be greater than 0"))).
+                body("currency", is(equalTo("must not be empty")));
+    }
+
+    @Test
+    public void getOfferByID_shouldReturn200AndBody() {
         Offer retrievedOffer = RequestBuilder.createOffer();
 
         when(mockOfferService.getOfferById(OFFER_ID)).thenReturn(retrievedOffer);
@@ -70,10 +88,12 @@ public class OfferControllerTest {
                 contentType(MediaType.APPLICATION_JSON_VALUE).
                 log().everything().
         when().
-                get(OFFERS_ENDPOINT+"{id}", OFFER_ID).
+                get(OFFERS_ENDPOINT + "{id}", OFFER_ID).
         then().
                 log().everything().
-                statusCode(HttpStatus.SC_OK);
+                statusCode(HttpStatus.SC_OK).
+                body("currency", is(equalTo("GBP"))).
+                body("description", is(equalTo("Test offer")));
     }
 
     @Test

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -19,6 +20,7 @@ public class OfferRequest {
     private String description;
 
     @NotNull
+    @Min(value = 0L, message = "The amount must be greater than 0")
     private BigDecimal amount;
 
     @NotEmpty
