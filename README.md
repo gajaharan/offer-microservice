@@ -75,11 +75,9 @@ https://raw.githubusercontent.com/gajaharan/offer-microservice/master/src/main/r
 
 ### Assumptions
 * Spent time designing the endpoint using Swaggerhub and created the swagger yaml file (in main resource folder).
-* Offer model is used is used as POST payload, GET response and entity. Ideally would of seperated this as three
-seperate models.
 * Kept the controller as simple as possible with three endpoints (create, retrieve by id, cancel by id)
 * Most of the business logic in the Offer Service
 * If time permitted would like to add friendly validation to the start and end date, so the user will get a 400 response about
-correct date format, if the start date is before end date, etc. Assuming the front end will check this.
+valid date, if the start date is before end date, etc. Assuming the front end will check this.
 * The offer expiry is checked when the offer is retrieved.
 * Offer statuses are saved into the database

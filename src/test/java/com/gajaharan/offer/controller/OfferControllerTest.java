@@ -2,6 +2,7 @@ package com.gajaharan.offer.controller;
 
 import com.gajaharan.offer.exception.OfferNotFoundException;
 import com.gajaharan.offer.model.Offer;
+import com.gajaharan.offer.model.OfferRequest;
 import com.gajaharan.offer.service.OfferService;
 import com.gajaharan.offer.util.RequestBuilder;
 import io.restassured.RestAssured;
@@ -44,11 +45,12 @@ public class OfferControllerTest {
     public void createOffer_shouldReturn201AndLocationHeader() {
         Long offerId = 0l;
         Offer createdOffer = RequestBuilder.createOffer();
+        OfferRequest offerRequest = RequestBuilder.createOfferRequest();
         when(mockOfferService.createOffer(createdOffer)).thenReturn(offerId);
 
         given().
                 contentType(MediaType.APPLICATION_JSON_VALUE).
-                body(createdOffer).
+                body(offerRequest).
                 log().everything().
         when().
                 post(OFFERS_ENDPOINT).

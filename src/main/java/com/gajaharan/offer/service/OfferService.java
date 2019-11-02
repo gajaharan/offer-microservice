@@ -24,10 +24,10 @@ public class OfferService {
     private final OfferRepository offerRepository;
 
     public Long createOffer(Offer offer) throws OfferServiceException {
-        offer.setStatus(OfferStatus.ACTIVE);
         try {
-            Offer createdOffer = offerRepository.save(offer);
-            return createdOffer.getId();
+
+            offer = offerRepository.save(offer);
+            return offer.getId();
         } catch (DataAccessException ex) {
             log.error("Unable to save {}", offer, ex);
             throw new OfferServiceException("Unable to save " + offer);
